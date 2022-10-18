@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
-from shop_main import views
+import shop_main.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.jwt')),
-    # path('email/', views.send_mail_endpoint, name="send_mail_endpoint")
+    # path('email/', shop_main.views.send_mail_endpoint, name="send_mail_endpoint")
+    path('activate/<str:uid>/<str:token>', shop_main.views.activation, name='activation')
 ]
