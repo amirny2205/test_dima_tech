@@ -1,0 +1,8 @@
+.env
+.env_prod
+.env_dev
+.env_docker_prod
+tmp.org
+tmp.org~
+env
+.idea
