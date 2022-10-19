@@ -8,7 +8,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from Crypto.Hash import SHA1
 from shop_main.models import *
 from shop_main.serializers import *
 import shop.settings
@@ -16,7 +16,7 @@ from djoser import signals
 from djoser.conf import settings
 from djoser.compat import get_user_email
 from shop_main.serializers import UserSerializerCustom
-
+import shop.settings
 
 # def send_mail_endpoint(request):
 #     print('sending email')
@@ -96,3 +96,24 @@ class Buy(APIView):
                 return Response('insufficent money')
         else:
             return Response('wrong bill_id')
+
+
+class Deposit(APIView):
+    def post(self, request, *args, **kwargs):
+        if any(['signature' not in request.data, \
+                'transaction_id' not in request.data, \
+                'user_id' not in request.data, \
+                'bill_id' not in request.data, \
+                'amount' not in request.data, \
+                ]):
+            return Response('some fields are missing')
+        signature_post,  transaction_id, user_id, bill_id, amount = \
+            request.data['signature'], request.data['transaction_id'], request.data['user_id'],\
+            request.data['bill_id'], request.data['amount']
+        signature = SHA1.new()
+        signature.update(f'{shop.settings.PRIVATE_KEY}:{transaction_id}:{user_id}:{bill_id}:{amount}'.encode())
+        if signature.hexdigest() != signature_post:
+            return Response('signatures did not match')
+
+        return Response('success')
+

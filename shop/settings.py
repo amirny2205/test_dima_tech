@@ -184,3 +184,5 @@ SERVER_EMAIL = ADMIN_EMAIL
 # this is for the activation workaround. See "activation" function inside shop_main.views
 SELF_HOST = env('SELF_HOST')
 SELF_PORT = env('SELF_PORT')
+
+PRIVATE_KEY = env('PRIVATE_KEY')
