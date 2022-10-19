@@ -21,6 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^auth/', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.jwt')),
-    # path('email/', shop_main.views.send_mail_endpoint, name="send_mail_endpoint")
-    path('activate/<str:uid>/<str:token>', shop_main.views.activation, name='activation')
+    # path('email/', shop_main.views.send_mail_endpoint, name="send_mail_endpoint"),
+    path('activate/<str:uid>/<str:token>', shop_main.views.activation, name='activation'),
+    path('secured_view_01', shop_main.views.SecuredView01.as_view(), name='secured_view_01'),
 ]

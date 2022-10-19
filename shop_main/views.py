@@ -2,7 +2,12 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.core.mail import send_mail
 import requests
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 import shop.settings
+
 
 # def send_mail_endpoint(request):
 #     print('sending email')
@@ -33,3 +38,17 @@ def activation(request, uid, token):
     print(type(url))
     requests.post(url, data={'uid':uid,'token':token})
     return HttpResponse('successfully activated account!')
+
+
+class SecuredView01(generics.GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+
+
+    def get(self, request, *args, **kwargs):
+        content = {'message': 'Hello, GeeksforGeeks'}
+        return Response(content)
+
+
+
+
+
