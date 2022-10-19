@@ -5,7 +5,6 @@ from djoser.conf import settings
 from djoser.serializers import UserSerializer
 
 
-
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -26,6 +25,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 class BillSerializerForUserS(serializers.ModelSerializer):
     transactions = TransactionSerializer(many=True)
+
     class Meta:
         model = Bill
         fields = ['bill_id', 'balance', 'transactions']
@@ -43,5 +43,3 @@ class UserSerializerCustom(UserSerializer):
             'bills',
         )
         read_only_fields = (settings.LOGIN_FIELD,)
-
-

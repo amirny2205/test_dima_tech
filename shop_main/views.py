@@ -13,21 +13,20 @@ from shop_main.serializers import UserSerializerCustom
 import shop.settings
 
 
-
 def activation(request, uid, token):
-    '''
+    """
     this is a workaround for user activation, because we have no frontend.
     auth/users/ creates a user and sends an activation link (defined by DJOSER['ACTIVATION_URL']) to user's email.
     Then documentation(https://djoser.readthedocs.io/en/latest/base_endpoints.html#user-activate) says:
     you should provide site in your frontend application (configured by ACTIVATION_URL)
     which will send POST request to activate endpoint.
-    '''
+    """
     activation_endpoint = 'auth/users/activation/'
     port = ':' + shop.settings.SELF_PORT if shop.settings.SELF_PORT else ''
     url = shop.settings.SELF_HOST + port + '/' + activation_endpoint
     print(url)
     print(type(url))
-    response = requests.post(url, data={'uid':uid,'token':token})
+    response = requests.post(url, data={'uid': uid, 'token': token})
     print(response.text)
     return HttpResponse('successfully activated account!')
 
@@ -35,12 +34,11 @@ def activation(request, uid, token):
 class ProductList(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated,]
+    permission_classes = (IsAuthenticated, )
 
 
 class GetSelfInfo(APIView):
-    permission_classes = (IsAuthenticated,)
-
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -50,7 +48,6 @@ class GetSelfInfo(APIView):
 
 class Buy(APIView):
     permission_classes = (IsAuthenticated,)
-
 
     def post(self, request):
         product_id = int(request.data['product_id'])
@@ -72,11 +69,11 @@ class Buy(APIView):
 
 class Deposit(APIView):
     def post(self, request, *args, **kwargs):
-        if any(['signature' not in request.data, \
-                'transaction_id' not in request.data, \
-                'user_id' not in request.data, \
-                'bill_id' not in request.data, \
-                'amount' not in request.data, \
+        if any(['signature' not in request.data,
+                'transaction_id' not in request.data,
+                'user_id' not in request.data,
+                'bill_id' not in request.data,
+                'amount' not in request.data,
                 ]):
             return Response('some fields are missing')
         signature_post,  transaction_id, user_id, bill_id, amount = \
@@ -91,7 +88,7 @@ class Deposit(APIView):
             return Response('signatures did not match')
         try:
             user = User.objects.get(id=user_id)
-        except User.DoesNotExist as e:
+        except User.DoesNotExist:
             return Response('user does not exist')
         try:
             bill = Bill.objects.get(bill_id=bill_id)
@@ -102,4 +99,3 @@ class Deposit(APIView):
         bill.balance += amount
         bill.save()
         return Response(f'success. Current bill balance is {bill.balance}')
-
