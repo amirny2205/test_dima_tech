@@ -7,9 +7,9 @@
 
 EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD - настройки для smtp
 
-SELF_HOST, SELF_PORT - урл сервера и порт(если иной чем 80), это для воркэраунда по активации. См. "activate" в shop_main.views
+SELF_HOST, SELF_PORT - урл сервера и порт(если иной чем 80), это для воркэраунда по активации. См. "activation" в shop_main.views
 
-PRIVATE_KEY - приватный ключ для эндпоинта payment/webhook/
+PRIVATE_KEY - приватный ключ для эндпоинта payment/webhook/ . Случайная строка.
 
 ## Описание работы сервиса:
 
@@ -23,7 +23,7 @@ PRIVATE_KEY - приватный ключ для эндпоинта payment/webh
 
 токен можно проверить на localhost:8000/auth/jwt/verify/ , передаем ключ token
 
-Имея токен, можем получить доступ к защищенным вью.
+Имея токен и передавая его а authorization("Bearer /token/" или "JWT /token"), можем получить доступ к защищенным вью.
 
 Среди них:
 
