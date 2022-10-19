@@ -24,10 +24,7 @@ def activation(request, uid, token):
     activation_endpoint = 'auth/users/activation/'
     port = ':' + shop.settings.SELF_PORT if shop.settings.SELF_PORT else ''
     url = shop.settings.SELF_HOST + port + '/' + activation_endpoint
-    print(url)
-    print(type(url))
     response = requests.post(url, data={'uid': uid, 'token': token})
-    print(response.text)
     return HttpResponse('successfully activated account!')
 
 
