@@ -32,11 +32,11 @@ urlpatterns = [
 
 
 # Here we are overriding users endpoint because we need to add bill at creation
-router = DefaultRouter()
-router.register("auth/users", UserViewSet, basename="user viewset overriden")
+# router = DefaultRouter()
+# router.register("auth/users", UserViewSet, basename="user viewset overriden")
 
 
-urlpatterns = router.urls + urlpatterns
+# urlpatterns = router.urls + urlpatterns
 
 
 

@@ -36,8 +36,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 #         return user
 
 class UserSerializerCustom(UserSerializer):
-    # bills = serializers.Field(read_only=True)
-
+    bills = BillSerializer(many=True)
 
     class Meta:
         model = User
@@ -47,3 +46,5 @@ class UserSerializerCustom(UserSerializer):
             'bills',
         )
         read_only_fields = (settings.LOGIN_FIELD,)
+
+

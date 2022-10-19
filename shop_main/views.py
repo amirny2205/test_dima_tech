@@ -62,27 +62,7 @@ class SecuredView01(generics.GenericAPIView):
 class ProductList(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
-
-
-class UserViewSet(djoser.views.UserViewSet):
-    pass
-    # serializer_class = UserSerializer
-
-    # def perform_create(self, serializer):
-    #     print(serializer)
-    #     user = serializer.save()
-    #     # Bill.objects.create(bill_id=generate_id(), user=user)
-    #     signals.user_registered.send(
-    #         sender=self.__class__, user=user, request=self.request
-    #     )
-    #
-    #     context = {"user": user}
-    #     to = [get_user_email(user)]
-    #     if settings.SEND_ACTIVATION_EMAIL:
-    #         settings.EMAIL.activation(self.request, context).send(to)
-    #     elif settings.SEND_CONFIRMATION_EMAIL:
-    #         settings.EMAIL.confirmation(self.request, context).send(to)
+    permission_classes = [IsAuthenticated,]
 
 
 class GetSelfInfo(APIView):
