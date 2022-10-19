@@ -28,6 +28,7 @@ urlpatterns = [
     path('secured_view_01/', SecuredView01.as_view(), name='secured_view_01'),
     path('products/', ProductList.as_view(), name='product_list'),
     path('self_info/', GetSelfInfo.as_view(), name='get self info'),
+    path('buy/', Buy.as_view(), name='buy')
 ]
 
 

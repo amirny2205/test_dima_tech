@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
 from django.core.mail import send_mail
 import requests
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -74,3 +75,24 @@ class GetSelfInfo(APIView):
         serializer = UserSerializerCustom(instance=user)
         return Response(serializer.data)
 
+
+class Buy(APIView):
+    permission_classes = (IsAuthenticated,)
+
+
+    def post(self, request):
+        product_id = int(request.data['product_id'])
+        product = get_object_or_404(Product.objects.all(), id=product_id)
+        user_bills = [b.bill_id for b in request.user.bills.all()]
+        bill_id = int(request.data['bill_id'])
+        if bill_id in user_bills:
+            bill = Bill.objects.get(bill_id=bill_id)
+            if bill.balance >= product.price:
+                transaction = Transaction.objects.create(bill=bill, summ=product.price)
+                bill.balance -= product.price
+                bill.save()
+                return Response('success')
+            else:
+                return Response('insufficent money')
+        else:
+            return Response('wrong bill_id')
