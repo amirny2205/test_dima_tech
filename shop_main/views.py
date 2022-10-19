@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from Crypto.Hash import SHA1
+
+import shop_main.models
 from shop_main.models import *
 from shop_main.serializers import *
 import shop.settings
@@ -109,11 +111,25 @@ class Deposit(APIView):
             return Response('some fields are missing')
         signature_post,  transaction_id, user_id, bill_id, amount = \
             request.data['signature'], request.data['transaction_id'], request.data['user_id'],\
-            request.data['bill_id'], request.data['amount']
+            request.data['bill_id'], int(request.data['amount'])
+
         signature = SHA1.new()
         signature.update(f'{shop.settings.PRIVATE_KEY}:{transaction_id}:{user_id}:{bill_id}:{amount}'.encode())
+        print(signature_post, transaction_id, user_id, bill_id, amount)
+        print(signature.hexdigest())
         if signature.hexdigest() != signature_post:
             return Response('signatures did not match')
-
-        return Response('success')
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist as e:
+            return Response('user does not exist')
+        try:
+            bill = Bill.objects.get(bill_id=bill_id)
+            if bill.user.id != user.id:
+                return Response('invalid data provided')
+        except Bill.DoesNotExist:
+            bill = Bill.objects.create(bill_id=shop_main.models.generate_id(), balance=0, user=user)
+        bill.balance += amount
+        bill.save()
+        return Response(f'success. Current balance is {bill.balance}')
 
