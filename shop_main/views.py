@@ -1,37 +1,17 @@
-import djoser.views
-from django.contrib.auth.models import User
-from django.http import HttpResponse, JsonResponse
-from django.core.mail import send_mail
+from django.http import HttpResponse
 import requests
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, status
+from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from Crypto.Hash import SHA1
-
-import shop_main.models
 from shop_main.models import *
 from shop_main.serializers import *
 import shop.settings
-from djoser import signals
-from djoser.conf import settings
-from djoser.compat import get_user_email
 from shop_main.serializers import UserSerializerCustom
 import shop.settings
 
-# def send_mail_endpoint(request):
-#     print('sending email')
-#     x = send_mail(
-#         'Subject here',
-#         'Here is the message.',
-#         'amirny2205@yandex.ru',
-#         ['amirny2205@yandex.ru'],
-#         fail_silently=False,
-#     )
-#     print(x)
-#     print('test')
-#     return HttpResponse(x)
 
 
 def activation(request, uid, token):
@@ -50,16 +30,6 @@ def activation(request, uid, token):
     response = requests.post(url, data={'uid':uid,'token':token})
     print(response.text)
     return HttpResponse('successfully activated account!')
-
-
-class SecuredView01(generics.GenericAPIView):
-    permission_classes = (IsAuthenticated,)
-
-
-    def get(self, request, *args, **kwargs):
-        print(request.user)
-        content = {'message': 'Hello, GeeksforGeeks'}
-        return Response(content)
 
 
 class ProductList(generics.ListAPIView):
@@ -128,8 +98,8 @@ class Deposit(APIView):
             if bill.user.id != user.id:
                 return Response('invalid data provided')
         except Bill.DoesNotExist:
-            bill = Bill.objects.create(bill_id=shop_main.models.generate_id(), balance=0, user=user)
+            bill = Bill.objects.create(bill_id=bill_id, balance=0, user=user)
         bill.balance += amount
         bill.save()
-        return Response(f'success. Current balance is {bill.balance}')
+        return Response(f'success. Current bill balance is {bill.balance}')
 

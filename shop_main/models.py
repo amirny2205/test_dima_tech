@@ -11,8 +11,6 @@ class Product(models.Model):
     def __str__(self):
         return self.title
 
-def generate_id():
-    return ''.join([str(random.randint(0,9)) for i in range(8)])
 
 class Bill(models.Model):
     bill_id = models.IntegerField(primary_key=True)

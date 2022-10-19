@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from shop_main.models import *
 from django.contrib.auth.models import User
-from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
 from djoser.conf import settings
 from djoser.serializers import UserSerializer
 
@@ -17,8 +16,6 @@ class BillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bill
         fields = '__all__'
-
-
 
 
 class TransactionSerializer(serializers.ModelSerializer):
