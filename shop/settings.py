@@ -161,10 +161,10 @@ SIMPLE_JWT = {
 DJOSER = {
     'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
-    'SERIALIZERS': {},
+    'SERIALIZERS': {
+#         'user_create': 'shop_main.serializers.UserCreateSerializer'
+    }
 }
-
-
 
 
 # SMTP

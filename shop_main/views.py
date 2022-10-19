@@ -1,12 +1,20 @@
+import djoser.views
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.mail import send_mail
 import requests
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from shop_main.models import *
+from shop_main.serializers import *
 import shop.settings
+from djoser import signals
+from djoser.conf import settings
+from djoser.compat import get_user_email
+from shop_main.serializers import UserSerializerCustom
 
 
 # def send_mail_endpoint(request):
@@ -36,7 +44,8 @@ def activation(request, uid, token):
     url = shop.settings.SELF_HOST + port + '/' + activation_endpoint
     print(url)
     print(type(url))
-    requests.post(url, data={'uid':uid,'token':token})
+    response = requests.post(url, data={'uid':uid,'token':token})
+    print(response.text)
     return HttpResponse('successfully activated account!')
 
 
@@ -45,10 +54,43 @@ class SecuredView01(generics.GenericAPIView):
 
 
     def get(self, request, *args, **kwargs):
+        print(request.user)
         content = {'message': 'Hello, GeeksforGeeks'}
         return Response(content)
 
 
+class ProductList(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
 
+
+class UserViewSet(djoser.views.UserViewSet):
+    pass
+    # serializer_class = UserSerializer
+
+    # def perform_create(self, serializer):
+    #     print(serializer)
+    #     user = serializer.save()
+    #     # Bill.objects.create(bill_id=generate_id(), user=user)
+    #     signals.user_registered.send(
+    #         sender=self.__class__, user=user, request=self.request
+    #     )
+    #
+    #     context = {"user": user}
+    #     to = [get_user_email(user)]
+    #     if settings.SEND_ACTIVATION_EMAIL:
+    #         settings.EMAIL.activation(self.request, context).send(to)
+    #     elif settings.SEND_CONFIRMATION_EMAIL:
+    #         settings.EMAIL.confirmation(self.request, context).send(to)
+
+
+class GetSelfInfo(APIView):
+    permission_classes = (IsAuthenticated,)
+
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        serializer = UserSerializerCustom(instance=user)
+        return Response(serializer.data)
 
