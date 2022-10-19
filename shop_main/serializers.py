@@ -19,26 +19,26 @@ class BillSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = '__all__'
 
 
+class BillSerializerForUserS(serializers.ModelSerializer):
+    transactions = TransactionSerializer(many=True)
+    class Meta:
+        model = Bill
+        fields = ['bill_id', 'balance', 'transactions']
 
-# class UserRegistrationSerializer(BaseUserRegistrationSerializer):
-#     def create(self, validated_data):
-#         try:
-#             user = self.perform_create(validated_data)
-#         except IntegrityError:
-#             self.fail("cannot_create_user")
-#         Bill.objects.create(bill_id=Bill.generate_id, user=user)
-#         return user
 
 class UserSerializerCustom(UserSerializer):
-    bills = BillSerializer(many=True)
+    bills = BillSerializerForUserS(many=True)
 
     class Meta:
+        depth = 2
         model = User
         fields = tuple(User.REQUIRED_FIELDS) + (
             settings.USER_ID_FIELD,
