@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  dima_django:
+    build:
+      dockerfile: Dockerfile_django
+      args:
+        REPO_DIR: .
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    working_dir: /root/test_dima_tech
+    env_file: .env_docker_dev
+    depends_on:
+      - dima_postgres
+  dima_postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: ";'safdlad;as;d"
+      POSTGRES_DB: shop
+
+
+
+
