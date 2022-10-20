@@ -44,7 +44,7 @@ class GetSelfInfo(APIView):
 
 
 class Buy(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
 
     def post(self, request):
         product_id = int(request.data['product_id'])
