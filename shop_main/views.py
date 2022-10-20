@@ -54,7 +54,7 @@ class Buy(APIView):
         if bill_id in user_bills:
             bill = Bill.objects.get(bill_id=bill_id)
             if bill.balance >= product.price:
-                transaction = Transaction.objects.create(bill=bill, summ=product.price)
+                transaction = Transaction.objects.create(bill=bill, summ=-product.price)
                 bill.balance -= product.price
                 bill.save()
                 return Response('success')
@@ -95,4 +95,5 @@ class Deposit(APIView):
             bill = Bill.objects.create(bill_id=bill_id, balance=0, user=user)
         bill.balance += amount
         bill.save()
+        transaction = Transaction.objects.create(bill=bill, summ=amount)
         return Response(f'success. Current bill balance is {bill.balance}')
