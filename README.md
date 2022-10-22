@@ -3,7 +3,9 @@
 
 ## Запуск сервиса:
 
-среди прочего в .env необходимо прописать следующее (открываем .env_example):
+настройки разделены в папке config.settings, 
+
+среди прочего в .env и в текущие settings необходимо прописать следующее (открываем .env_example):
 
 EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD - настройки для smtp
 
