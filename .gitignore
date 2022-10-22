@@ -8,6 +8,7 @@ env
 .idea
 \#tmp.org#
 .#tmp.org
+docker-compose.yml~
 
 
 # paste from internet, https://github.com/github/gitignore/blob/main/Python.gitignore
