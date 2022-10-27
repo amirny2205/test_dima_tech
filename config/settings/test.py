@@ -12,8 +12,8 @@ DATABASES = {
         'NAME': "shop",
         'USER': env("DATABASE_USER"),
         'PASSWORD': env("DATABASE_PASSWORD"),
-        'HOST': "db",
-        'PORT': 5432,
+        'HOST': "localhost",
+        'PORT': 5401,
    }
 }
 

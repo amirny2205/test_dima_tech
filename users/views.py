@@ -24,7 +24,7 @@ def activation_view(request, uid, token):
     port = ':' + settings.SELF_PORT if settings.SELF_PORT else ''
     url = settings.SELF_HOST + port + '/' + activation_endpoint
     requests.post(url, data={'uid': uid, 'token': token})
-    return HttpResponse('successfully activated account!')
+    return HttpResponse({'detail': 'successfully activated account!'})
 
 
 class GetSelfInfoAPIView(APIView):
@@ -52,18 +52,18 @@ class DepositAPIView(APIView):
         signature = SHA1.new()
         signature.update(f'{settings.PRIVATE_KEY}:{transaction_id}:{user_id}:{bill_id}:{amount}'.encode())
         if signature.hexdigest() != signature_post:
-            return Response('signatures did not match', status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'signatures did not match'}, status=status.HTTP_400_BAD_REQUEST)
         try:
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
-            return Response('user does not exist', status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'user does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         try:
             bill = BillModel.objects.get(bill_id=bill_id)
             if bill.owner.id != user.id:
-                return Response('invalid data provided', status=status.HTTP_400_BAD_REQUEST)
+                return Response({'detail': 'invalid data provided'}, status=status.HTTP_400_BAD_REQUEST)
         except BillModel.DoesNotExist:
             bill = BillModel.objects.create(bill_id=bill_id, balance=0, owner=user)
         bill.balance += amount
         bill.save()
         TransactionModel.objects.create(bill=bill, summ=amount)
-        return Response(f'success. Current bill balance is {bill.balance}')
+        return Response({'detail': f'success. Current bill balance is {bill.balance}'})

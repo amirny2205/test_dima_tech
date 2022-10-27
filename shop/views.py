@@ -27,8 +27,8 @@ class BuyAPIView(APIView):
                 TransactionModel.objects.create(bill=bill, summ=-product.price)
                 bill.balance -= product.price
                 bill.save()
-                return Response('success')
+                return Response({'detail':'success'})
             else:
-                return Response('insufficient money', status=status.HTTP_400_BAD_REQUEST)
+                return Response({'detail':'insufficient money'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response('wrong bill_id', status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail':'wrong bill id'}, status=status.HTTP_400_BAD_REQUEST)

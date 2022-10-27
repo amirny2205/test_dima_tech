@@ -39,3 +39,8 @@ buy/ : POST; в теле ждём product_id и bill_id
 
 есть незащищённый вью, payment/webhook/ . Ждёт POST с датой(как требуется в задании):
 signature, transaction_id, user_id, bill_id, amount.
+
+
+## написаны тесты.
+
+python manage.py test --settings=config.settings.dev

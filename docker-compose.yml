@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  django:
+  backend:
     build:
       dockerfile: Dockerfile_django
       args:
@@ -14,8 +14,8 @@ services:
     working_dir: /root/test_dima_tech
     env_file: .env_docker_dev
     depends_on:
-      - postgres
-  postgres:
+      - db
+  db:
     image: postgres
     environment:
       POSTGRES_PASSWORD: ";'safdlad;as;d"
