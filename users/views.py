@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import requests
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -24,7 +24,7 @@ def activation_view(request, uid, token):
     port = ':' + settings.SELF_PORT if settings.SELF_PORT else ''
     url = settings.SELF_HOST + port + '/' + activation_endpoint
     requests.post(url, data={'uid': uid, 'token': token})
-    return HttpResponse({'detail': 'successfully activated account!'})
+    return HttpResponse('successfully activated account!')
 
 
 class GetSelfInfoAPIView(APIView):
